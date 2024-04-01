@@ -74,3 +74,5 @@ const veveController = {
     }
 
 };
+
+export default veveController;
