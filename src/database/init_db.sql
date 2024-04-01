@@ -10,8 +10,9 @@ CREATE TABLE poi (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    url VARCHAR(255),
+    url TEXT,
     lon REAL NOT NULL,
-    lat REAL NOT NULL,
-    owner VARCHAR(100) NOT NULL
+    lng REAL NOT NULL,
+    owner VARCHAR(100) NOT NULL,
+    level INTEGER NOT NULL DEFAULT 1
 );
