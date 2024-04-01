@@ -13,6 +13,23 @@ CREATE TABLE poi (
     url TEXT,
     lon REAL NOT NULL,
     lng REAL NOT NULL,
-    owner VARCHAR(100) NOT NULL,
-    level INTEGER NOT NULL DEFAULT 1
+    owner VARCHAR(100) ,
+    level INTEGER  DEFAULT 1
+);
+
+CREATE TABLE attaque (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    power INTEGER NOT NULL,
+    type VARCHAR(100) NOT NULL
+
+);
+
+CREATE TABLE poi_attaque (
+    id SERIAL PRIMARY KEY,
+    id_poi INTEGER NOT NULL,
+    id_attaque INTEGER NOT NULL,
+    FOREIGN KEY (id_poi) REFERENCES poi(id),
+    FOREIGN KEY (id_attaque) REFERENCES attaque(id)
 );
