@@ -1,27 +1,71 @@
-import VevePoi from '../models/veveModel';
-import { Request, Response } from 'express';
 
-import {v2 as cloudinary} from 'cloudinary';
-          
-cloudinary.config({ 
+const cloudinary = require("cloudinary").v2;
+// Return "https" URLs by setting secure: true
+cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET 
+  api_secret: process.env.API_SECRET,
 });
 
-async function swapImg(img: any, name:string, id: string, req: Request, res: Response) {
-  const imageFile: any = img;
+
+async function uploadImage(imagePath: any) {
+    const options = {
+        use_filename: true,
+        unique_filename: false,
+        overwrite: true,
+    };
+
+    try {
+        const result = await cloudinary.uploader.upload(imagePath, options);
+        console.log(result);
+        return result.public_id;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+/////////////////////////////////////
+// Gets details of an uploaded image
+/////////////////////////////////////
+const getAssetInfo = async (publicId:any) => {
+
+  // Return colors in the response
+  const options = {
+    colors: true,
+  };
 
   try {
-    const cloudinaryResponse = await cloudinary.uploader.upload(imageFile, { tags: 'basic_sample', public_id:  name + id  });
-    const imageURL: string = cloudinaryResponse.secure_url;
-
-    await VevePoi.setImg(parseInt(id, 10), imageURL);
-
-    res.status(200).send("Updated");
-  } catch (err) {
-    res.status(500).json(err);
+      // Get details about the asset
+      const result = await cloudinary.api.resource(publicId, options);
+      console.log(result);
+      return result.colors;
+      } catch (error) {
+      console.error(error);
   }
-}
+};
 
-export default swapImg;
+//////////////////////////////////////////////////////////////
+// Creates an HTML image tag with a transformation that
+// results in a circular thumbnail crop of the image  
+// focused on the faces, applying an outline of the  
+// first color, and setting a background of the second color.
+//////////////////////////////////////////////////////////////
+const createImageTag = (publicId: any, ...colors:any) => {
+
+  // Set the effect color and background color
+  const [effectColor, backgroundColor] = colors;
+
+  // Create an image tag with transformations applied to the src URL
+  let imageTag = cloudinary.image(publicId, {
+    transformation: [
+      { width: 250, height: 250, gravity: 'faces', crop: 'thumb' },
+      { radius: 'max' },
+      { effect: 'outline:10', color: effectColor },
+      { background: backgroundColor },
+    ],
+  });
+
+  return imageTag;
+};
+
+export {  uploadImage, getAssetInfo, createImageTag};

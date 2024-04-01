@@ -1,5 +1,8 @@
 import vevePoi from "../../models/veveModel";
-import swapImg from "../../services/cloudinary";
+import { v2 as cloudinary } from 'cloudinary';
+import fs from 'fs';
+
+
 
 const veveController = {
     async getAll(req: any, res: any) {
@@ -74,13 +77,33 @@ const veveController = {
         }
     },
 
-    async swapImg(req: any, res: any) {
+    async cloudinaryUpload(req: any, res: any) {
         try {
-            await swapImg(req.body.image, req.body.name, req.params.id, req, res);
-        } catch (err) {
-            res.status(500).json(err);
-        }
-    }
+            // Récupérer le chemin du fichier à partir de la requête
+            const filePath = req.file.path;
+        
+            if (!filePath) {
+              return res.status(400).json({ error: 'No file uploaded' });
+            }
+        
+            // Télécharger le fichier vers Cloudinary
+            const result = await cloudinary.uploader.upload(filePath);
+            console.log(result);
+        
+            // Supprimer le fichier temporaire après téléchargement
+            fs.unlinkSync(filePath);
+        
+            // Envoyer la réponse avec l'URL sécurisée de l'image téléchargée
+            return res.status(200).json({ message: 'Image uploaded successfully', imageUrl: result.secure_url });
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            return res.status(500).json({ error: 'An error occurred during image upload' });
+          }
+       }
+       
+       
+    
+ 
 
 };
 

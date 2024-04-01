@@ -4,6 +4,23 @@ import utilisateurController from "../controllers/controller";
 import poiController from "../controllers/poiController";
 import veveController from "../controllers/veve/veveController";
 
+import multer from "multer";
+
+const storage = multer.diskStorage({
+  destination: "./public/data/uploads/",
+  filename: (req, file, cb) => {
+  cb(null, Date.now()+ '-' + file.originalname);
+  },
+  });
+  
+  
+
+const upload = multer({ storage });
+
+// Le reste de votre code...
+
+  
+
 const router = express.Router();
 
 // Utilisateur routes
@@ -27,7 +44,6 @@ router.delete("/veve/:id", veveController.delete);
 router.get("/veve/nom/:nom", veveController.getByName);
 router.get("/veve/owner/:owner", veveController.getByOwner);
 
-router.post("/swapImg", veveController.swapImg);
-
+router.post('/upload', upload.single('image'), veveController.cloudinaryUpload);
 
   export default router

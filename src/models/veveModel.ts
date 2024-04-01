@@ -37,9 +37,11 @@ class VevePoi extends Model {
         return this.get("SELECT * FROM veve WHERE rate = $1", [rate]);
     }
 
-    static async setImg(id: number, image: string): Promise<void> {
-        return this.run("UPDATE veve SET url = $1 WHERE id = $2", [image, id]);
+    static async setImg(id: number, image: any, name: string): Promise<void> {
+        return this.run("UPDATE veve SET url = $1, name = $2 WHERE id = $3", [image, name, id]);
     }
+
+    
 }
 
 export default VevePoi;
