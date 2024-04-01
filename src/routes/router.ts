@@ -45,5 +45,6 @@ router.get("/veve/nom/:nom", veveController.getByName);
 router.get("/veve/owner/:owner", veveController.getByOwner);
 
 router.post('/upload', upload.single('image'), veveController.cloudinaryUpload);
+router.post('/updateImg',  veveController.updateImgUrl);
 
   export default router
