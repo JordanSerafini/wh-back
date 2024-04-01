@@ -10,7 +10,7 @@ cloudinary.config({
 });
 
 async function swapImg(img: any, name:string, id: string, req: Request, res: Response) {
-  const imageFile: string = img;
+  const imageFile: any = img;
 
   try {
     const cloudinaryResponse = await cloudinary.uploader.upload(imageFile, { tags: 'basic_sample', public_id:  name + id  });
