@@ -27,5 +27,7 @@ router.delete("/veve/:id", veveController.delete);
 router.get("/veve/nom/:nom", veveController.getByName);
 router.get("/veve/owner/:owner", veveController.getByOwner);
 
+router.post("/swapImg", veveController.swapImg);
+
 
   export default router

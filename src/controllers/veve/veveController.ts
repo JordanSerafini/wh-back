@@ -1,4 +1,5 @@
 import vevePoi from "../../models/veveModel";
+import swapImg from "../../services/cloudinary";
 
 const veveController = {
     async getAll(req: any, res: any) {
@@ -68,6 +69,14 @@ const veveController = {
         try {
             const data = await vevePoi.findByRate(req.params.rate);
             res.json(data);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+
+    async swapImg(req: any, res: any) {
+        try {
+            await swapImg(req.body.image, req.body.name, req.params.id, req, res);
         } catch (err) {
             res.status(500).json(err);
         }
