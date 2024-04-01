@@ -22,12 +22,13 @@ const veveController = {
   },
 
   async create(req: any, res: any) {
+  console.log(req.body);
     try {
       await vevePoi.create(
-        req.body.nom,
+        req.body.name,
         req.body.description,
-        req.body.latitude,
-        req.body.longitude,
+        req.body.lat,
+        req.body.lng,
         req.body.image
       );
       res.status(201).send("Created");
@@ -40,7 +41,7 @@ const veveController = {
     try {
       await vevePoi.update(
         req.params.id,
-        req.body.nom,
+        req.body.name,
         req.body.description,
         req.body.latitude,
         req.body.longitude,
@@ -63,7 +64,7 @@ const veveController = {
 
   async getByName(req: any, res: any) {
     try {
-      const data = await vevePoi.findByNom(req.params.nom);
+      const data = await vevePoi.findByName(req.params.name);
       res.json(data);
     } catch (err) {
       res.status(500).json(err);
